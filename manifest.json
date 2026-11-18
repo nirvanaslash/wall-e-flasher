@@ -1,6 +1,6 @@
 {
   "name": "WALL-E AI (Custom)",
-  "version": "0.1.0+9e0ed0f",
+  "version": "0.1.1+25ec996",
   "new_install_prompt_erase": true,
   "builds": [
     {
