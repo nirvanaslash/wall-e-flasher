@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WALL-E AI · 一键刷机</title>
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+<style>
+  :root { --fg:#1f2933; --muted:#616e7c; --line:#e4e7eb; --accent:#2f5597; --warn-bg:#fff8e1; --warn-line:#ffe082; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 56px; font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+         color:var(--fg); background:#f7f9fb; line-height:1.7; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  .sub { color:var(--muted); font-size:14px; margin-bottom:24px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .warn { background:var(--warn-bg); border:1px solid var(--warn-line); }
+  .warn strong { color:#8a6d3b; }
+  ol { padding-left: 20px; margin: 8px 0 0; }
+  li { margin-bottom: 8px; }
+  .btn-row { text-align:center; margin: 24px 0 8px; }
+  esp-web-install-button { --esp-tools-button-color:#2f5597; }
+  .meta { font-size:13px; color:var(--muted); border-top:1px dashed var(--line); margin-top:18px; padding-top:12px; }
+  code { background:#f0f2f5; padding:1px 5px; border-radius:4px; font-size:13px; }
+  .kbd { display:inline-block; border:1px solid #cbd2d9; border-bottom-width:2px; border-radius:5px; padding:0 6px; font-size:13px; background:#fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>WALL-E AI 固件刷机页</h1>
+  <div class="sub">自研固件（支持 OV5640 自动对焦）· 基于 xiaozhi-esp32</div>
+
+  <div class="card warn">
+    <strong>刷之前先做一件事：</strong>把设备后台（xiaozhi.me 控制台）里的
+    「OTA 升级」开关<strong>关掉</strong>。<br>
+    只要它还开着，刷完一联网就会被自动顶回原厂 2.4.0，白刷一次。
+  </div>
+
+  <div class="card">
+    <strong>刷机步骤</strong>
+    <ol>
+      <li>用 <strong>数据线</strong>（不是充电线）把机器连到电脑。</li>
+      <li>用 <strong>Chrome 或 Edge</strong> 打开本页（手机浏览器不行，必须是电脑）。</li>
+      <li>点下面的「安装」，在弹出的列表里选设备端口（一般是 COM 开头的那个）。</li>
+      <li>等进度条走完，机器会自动重启。</li>
+    </ol>
+    <div class="btn-row">
+      <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+    </div>
+    <div class="meta" id="meta">正在读取固件信息…</div>
+  </div>
+
+  <div class="card">
+    <strong>设备没出现在端口列表里？</strong>
+    <p style="margin:8px 0 0">
+      按住 <span class="kbd">BOOT</span> 不放 → 点一下 <span class="kbd">RESET</span> → 松开
+      <span class="kbd">BOOT</span>，就能进入刷机模式，再点一次「安装」。
+    </p>
+  </div>
+
+  <div class="card">
+    <strong>刷完帮我回答 5 个问题</strong>
+    <p style="margin:8px 0 0; color:var(--muted); font-size:14px">
+      【1】屏幕：A 有画面 / B 亮但全黑 / C 完全不亮<br>
+      【2】说话有反应吗：A 能正常对话 / B 有反应但听不清 / C 完全没反应<br>
+      【3】说"打开摄像头看看这是什么"：A 能说出画面内容 / B 报错打不开 / C 没反应<br>
+      【4】说"往前走"：A 动了 / B 抖一下或重启 / C 完全不动<br>
+      【5】方便的话抓一份开机串口日志（115200）截图发我 —— 这条最能定位问题。
+    </p>
+  </div>
+
+</div>
+
+<script>
+  fetch('manifest.json', { cache: 'no-store' })
+    .then(r => r.json())
+    .then(m => {
+      const b = (m.builds && m.builds[0]) || {};
+      const part = (b.parts && b.parts[0]) || {};
+      document.getElementById('meta').innerHTML =
+        '固件版本：<code>' + (m.version || '?') + '</code>　·　芯片：' + (b.chipFamily || '?') +
+        '　·　烧录偏移：<code>' + (part.offset || 0) + '</code>' +
+        '<br>刷机会整片擦除（含 WiFi 配置），刷完需要重新配网。';
+    })
+    .catch(() => {
+      document.getElementById('meta').textContent = '固件信息读取失败，但安装按钮仍可使用。';
+    });
+</script>
+</body>
+</html>
