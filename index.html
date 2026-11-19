@@ -46,9 +46,19 @@
       <li>等进度条走完，机器会自动重启。</li>
     </ol>
     <div class="btn-row">
-      <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+      <esp-web-install-button id="installer"></esp-web-install-button>
     </div>
     <div class="meta" id="meta">正在读取固件信息…</div>
+    <script>
+      // GitHub Pages 对所有文件下发 Cache-Control: max-age=600，
+      // 如果直接用 manifest="manifest.json"，浏览器可能拿到 10 分钟前的旧清单，
+      // 于是「页面上显示新版本、实际刷进去的是旧固件」。
+      // 给 manifest 加时间戳，保证每次打开页面都取最新清单。
+      (function () {
+        var btn = document.getElementById('installer');
+        btn.setAttribute('manifest', 'manifest.json?v=' + Date.now());
+      })();
+    </script>
   </div>
 
   <div class="card">
@@ -73,7 +83,7 @@
 </div>
 
 <script>
-  fetch('manifest.json', { cache: 'no-store' })
+  fetch('manifest.json?v=' + Date.now(), { cache: 'no-store' })
     .then(r => r.json())
     .then(m => {
       const b = (m.builds && m.builds[0]) || {};
@@ -81,7 +91,10 @@
       document.getElementById('meta').innerHTML =
         '固件版本：<code>' + (m.version || '?') + '</code>　·　芯片：' + (b.chipFamily || '?') +
         '　·　烧录偏移：<code>' + (part.offset || 0) + '</code>' +
-        '<br>刷机会整片擦除（含 WiFi 配置），刷完需要重新配网。';
+        '<br>镜像文件：<code>' + (part.path || '?') + '</code>' +
+        '<br>刷机会整片擦除（含 WiFi 配置），刷完需要重新配网。' +
+        '<br><span style="color:#8a6d3b">如果这里的版本号不是你要刷的那一版，' +
+        '按 <b>Ctrl + F5</b> 强制刷新后再点安装。</span>';
     })
     .catch(() => {
       document.getElementById('meta').textContent = '固件信息读取失败，但安装按钮仍可使用。';
