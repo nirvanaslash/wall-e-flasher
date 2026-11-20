@@ -68,4 +68,8 @@ git add -A && git commit -m "firmware: <版本>" && git push
 
 ## 许可
 
-固件基于 MIT 许可的 xiaozhi-esp32；本仓库的 `wall-e-factory.bin` 是该工程的编译产物。
+固件基于 MIT 许可的 xiaozhi-esp32；本仓库的 `wall-e-factory-*.bin` 是该工程的编译产物。
+
+本二进制还包含 Apache-2.0（ESP-IDF、esp32-camera）、MIT（LVGL）等第三方组件，
+以及乐鑫 ESP-SR 语音组件。完整的组件清单与许可证声明见
+[`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md)。
