@@ -1,13 +1,13 @@
 {
   "name": "WALL-E AI (Custom)",
-  "version": "0.1.2+0b29c3b",
+  "version": "0.2.0+0f70d31",
   "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "wall-e-factory-0.1.2-0b29c3b.bin",
+          "path": "wall-e-factory-0.2.0-0f70d31.bin",
           "offset": 0
         }
       ]
